@@ -1,0 +1,83 @@
+#include <bits/stdc++.h>
+#define rep(i,n) for (int i=0; i < (n); ++i)
+#define all(v) v.begin(),v.end()
+using namespace std;
+using ll = long long;
+
+/**/
+
+struct Student {
+    int id, grade, subject, time, difficulty;
+    string name;
+};
+struct Teacher {
+    int id, subject, time, difficulty;
+    string name;
+};
+
+vector<pair<int,int>> student_list; //(difficulty,id)
+vector<pair<int,int>> teacher_list; //(difficulty,id)
+map<int,Student> from_id_to_student; //生徒IDから生徒情報への写像
+map<int,Teacher> from_id_to_teacher; //講師IDから講師情報への写像
+
+void Input_Student(int number_of_student){
+    //読み込むファイルのパスを入力する
+    const string file_path = "";
+    ifstream ifs(file_path);
+    if(!ifs) {
+        cout << "ファイルが開けませんでした。" << endl;
+        return 0;
+    }
+    for(int i = 0; i < number_of_student ; i++) {
+        Student student;
+        ifs >> student.id >> student.grade >> student.subject >> student.time >> student.name;
+        from_id_to_student[student.id] = student;
+    }
+}
+
+void Input_Teacher(int number_of_teacher){
+    //読み込むファイルのパスを入力する
+    const string file_path = "";
+    ifstream ifs(file_path);
+    if(!ifs) {
+        cout << "ファイルが開けませんでした。" << endl;
+        return 0;
+    }
+    for(int i = 0; i < number_of_teacher ; i++) {
+        Teacher teacher;
+        ifs >> teacher.id >> teacher.subject >> teacher.time >> teacher.name;
+        from_id_to_teacher[teacher.id] = teacher;
+    }
+}
+
+void Calc_Student_Difficulty() {
+
+}
+
+void Calc_Teacher_Difficulty() {
+
+}
+
+void Calc_Difficulty() {
+    Calc_Student_Difficulty()
+    Calc_Teacher_Difficulty()
+}
+
+void Input() {
+    Input_Teacher();
+    Input_Student();
+}
+
+
+
+int main(){
+    //ファイルから情報を入力する
+    Input();
+    //情報から優先順位を決定する
+    Calc_Difficulty();
+    //生徒と講師を配置する
+    Create_Table();
+    //結果を表示する or ファイルに出力する
+    Show_Result();
+    return 0;
+}
