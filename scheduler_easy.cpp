@@ -1,4 +1,11 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <map>
+#include <set>
+
 using namespace std;
 
 /*生徒の人数 N 講師の人数 M とするとCreate_Tableがボトルネックで計算量は(NMlogM)*/
