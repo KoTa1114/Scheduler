@@ -148,31 +148,25 @@ void Create_Table() {
     }
 }
 
+void Show_Result_Sub(std::vector<Table>& table_list) {
+    for(auto table : table_list) {
+        std::cout << "座席番号: " << table.number << std::endl; 
+        std::cout << table.student_name << ' ' << table.grade << ' ' << table.subject << std::endl;
+        std::cout << "担当講師: " << table.teacher_name << std::endl;
+        std::cout << std::endl;
+    }
+}
+
 void Show_Result() {
     std::cout << "1限" << std::endl;
     std::cout << std::endl;
-    for(auto table : table_list1) {
-        std::cout << "座席番号: " << table.number << std::endl;
-        std::cout << table.student_name << ' ' << table.grade << ' ' << table.subject << std::endl;
-        std::cout << "担当講師: " << table.teacher_name << std::endl;
-        std::cout << std::endl;
-    }
+    Show_Result_Sub(table_list1);
     std::cout << "2限" << std::endl;
     std::cout << std::endl;
-    for(auto table : table_list2) {
-        std::cout << "座席番号: " << table.number << std::endl;
-        std::cout << table.student_name << ' ' << table.grade << ' ' << table.subject << std::endl;
-        std::cout << "担当講師: " << table.teacher_name << std::endl;
-        std::cout << std::endl;
-    }
+    Show_Result_Sub(table_list2);
     std::cout << "3限" << std::endl;
     std::cout << std::endl;
-    for(auto table : table_list3) {
-        std::cout << "座席番号: " << table.number << std::endl;
-        std::cout << table.student_name << ' ' << table.grade << ' ' << table.subject << std::endl;
-        std::cout << "担当講師: " << table.teacher_name << std::endl;
-        std::cout << std::endl;
-    }
+    Show_Result_Sub(table_list3);
     if(cannot_place_student.size() != 0) {
         std::cout << "配置できなかった生徒がいます。" << std::endl;
         for(Student student : cannot_place_student) {
