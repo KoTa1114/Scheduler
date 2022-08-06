@@ -9,19 +9,50 @@
 /*生徒の人数 N 講師の人数 M とするとCreate_Tableがボトルネックで計算量は(NMlogM)*/
 
 
-struct Student {
-    int id, grade, subject, time, difficulty;
+class Student {
+    int id, grade, subject, time;
     std::string name;
+    public:
+    void SetId(int id_) {id = id_;}
+    void SetGrade(int grade_) {grade = grade_;}
+    void SetSubject(int subject_) {subject = subject_;}
+    void SetTime(int time_) {time = time_;}
+    void SetName(std::string name_) {name = name_;}
+    int GetId() {return id;}
+    int GetGrade() {return grade;}
+    int GetSubject() {return subject;}
+    int GetTime() {return time;}
+    std::string GetName() {return name;}
 };
-struct Teacher {
-    int id, subject, difficulty;
+class Teacher {
+    int id, subject;
     int time[3]; //1のとき担当可能
     std::string name;
+    public:
+    void SetId(int id_) {id = id_;}
+    void SetSubject(int subject_) {subject = subject_;}
+    void SetTime(int index, int time_) {time[index] = time_;}
+    void SetName(std::string name_) {name = name_;}
+    int GetId() {return id;}
+    int GetSubject() {return subject;}
+    int GetTime(int index) {return time[index];}
+    std::string GetName() {return name;}
 };
 
-struct Table {
+class Table {
     int grade, number;
     std::string student_name, teacher_name, subject;
+    public:
+    void SetGrade(int grade_) {grade = grade_;}
+    void SetNumber(int number_) {number = number_;}
+    void SetStudent_name(std::string student_name_) {student_name = student_name_;}
+    void SetTeacher_name(std::string teacher_name_) {teacher_name = teacher_name_;}
+    void SetSubject(std::string subject_) {subject = subject_;}
+    int GetGrade() {return grade;}
+    int GetNumber() {return number;}
+    std::string GetStudent_name() {return student_name;}
+    std::string GetTeacher_name() {return teacher_name;}
+    std::string GetSubject() {return subject;}
 };
 
 std::vector<std::pair<int, int>> student_list; //(difficulty,id)
@@ -43,8 +74,15 @@ void Input_Student(int number_of_student){
     }
     for(int i = 0; i < number_of_student ; i++) {
         Student student;
-        ifs >> student.id >> student.grade >> student.subject >> student.time >> student.name;
-        from_id_to_student[student.id] = student;
+        int id, grade, subject, time;
+        std::string name;
+        ifs >> id >> grade >> subject >> time >> name;
+        student.SetId(id);
+        student.SetGrade(grade);
+        student.SetSubject(subject);
+        student.SetTime(time);
+        student.SetName(name);
+        from_id_to_student[student.GetId()] = student;
     }
 }
 
@@ -57,30 +95,38 @@ void Input_Teacher(int number_of_teacher){
     }
     for(int i = 0; i < number_of_teacher ; i++) {
         Teacher teacher;
-        ifs >> teacher.id >> teacher.subject >> teacher.name >> teacher.time[0] >> teacher.time[1] >> teacher.time[2];
-        from_id_to_teacher[teacher.id] = teacher;
+        int id, subject, time0, time1, time2;
+        std::string name;
+        ifs >> id >> subject >> name >> time0 >> time1 >> time2;
+        teacher.SetId(id);
+        teacher.SetSubject(subject);
+        teacher.SetTime(0,time0);
+        teacher.SetTime(1,time1);
+        teacher.SetTime(2,time2);
+        teacher.SetName(name);
+        from_id_to_teacher[teacher.GetId()] = teacher;
     }
 }
 
 int Calc_Student_Difficulty_Sub(Student student) {
     int difficulty = 0;
-    difficulty += student.grade;
-    difficulty += student.subject;
-    difficulty += 3 - student.time;
+    difficulty += student.GetGrade();
+    difficulty += student.GetSubject();
+    difficulty += 3 - student.GetTime();
     return difficulty;
 }
 
 int Calc_Teacher_Difficulty_Sub(Teacher teacher) {
     int difficulty = 0;
-    difficulty += 3 - (teacher.time[0] + teacher.time[1] + teacher.time[2]);
-    difficulty += 4 - teacher.subject;
+    difficulty += 3 - (teacher.GetTime(0) + teacher.GetTime(1) + teacher.GetTime(2));
+    difficulty += 4 - teacher.GetSubject();
     return difficulty;
 }
 
 void Calc_Student_Difficulty() {
     for(auto student : from_id_to_student) {
         std::pair<int,int> student_difficulty;
-        student_difficulty.second = student.second.id;
+        student_difficulty.second = student.second.GetId();
         student_difficulty.first = Calc_Student_Difficulty_Sub(student.second);
         student_list.push_back(student_difficulty);
     }
@@ -90,7 +136,7 @@ void Calc_Student_Difficulty() {
 void Calc_Teacher_Difficulty() {
     for(auto teacher : from_id_to_teacher) {
         std::pair<int, int> teacher_difficulty;
-        teacher_difficulty.second = teacher.second.id;
+        teacher_difficulty.second = teacher.second.GetId();
         teacher_difficulty.first = Calc_Teacher_Difficulty_Sub(teacher.second);
         teacher_list.push_back(teacher_difficulty);
     }
@@ -124,19 +170,19 @@ void Create_Table() {
         bool ok = false;
         for(auto a_teacher : teacher_list) {
             Teacher teacher = from_id_to_teacher[a_teacher.second];
-            if(student.subject == teacher.subject) {
-                if(was.find(std::make_pair(teacher.id,student.time)) == was.end() && teacher.time[student.time-1] == 1) {
+            if(student.GetSubject() == teacher.GetSubject()) {
+                if(was.find(std::make_pair(teacher.GetId(),student.GetTime())) == was.end() && teacher.GetTime(student.GetTime()-1) == 1) {
                     Table table;
-                    table.grade = student.grade;
-                    table.number = table_num[student.time-1];
-                    table.student_name = student.name;
-                    table.teacher_name = teacher.name;
-                    table.subject = Subject(student.subject);
-                    if(student.time == 1) table_list1.push_back(table);
-                    if(student.time == 2) table_list2.push_back(table);
-                    if(student.time == 3) table_list3.push_back(table);
-                    was.insert(std::make_pair(teacher.id,student.time));
-                    table_num[student.time-1]++;
+                    table.SetGrade(student.GetGrade());
+                    table.SetNumber(table_num[student.GetTime()-1]);
+                    table.SetStudent_name(student.GetName());
+                    table.SetTeacher_name(teacher.GetName());
+                    table.SetSubject(Subject(student.GetSubject()));
+                    if(student.GetTime() == 1) table_list1.push_back(table);
+                    if(student.GetTime() == 2) table_list2.push_back(table);
+                    if(student.GetTime() == 3) table_list3.push_back(table);
+                    was.insert(std::make_pair(teacher.GetId(),student.GetTime()));
+                    table_num[student.GetTime()-1]++;
                     ok = true;
                     break;
                 }
@@ -150,9 +196,9 @@ void Create_Table() {
 
 void Show_Result_Sub(std::vector<Table>& table_list) {
     for(auto table : table_list) {
-        std::cout << "座席番号: " << table.number << std::endl; 
-        std::cout << table.student_name << ' ' << table.grade << ' ' << table.subject << std::endl;
-        std::cout << "担当講師: " << table.teacher_name << std::endl;
+        std::cout << "座席番号: " << table.GetNumber() << std::endl; 
+        std::cout << table.GetStudent_name() << ' ' << table.GetGrade() << ' ' << table.GetSubject() << std::endl;
+        std::cout << "担当講師: " << table.GetTeacher_name() << std::endl;
         std::cout << std::endl;
     }
 }
@@ -170,7 +216,7 @@ void Show_Result() {
     if(cannot_place_student.size() != 0) {
         std::cout << "配置できなかった生徒がいます。" << std::endl;
         for(Student student : cannot_place_student) {
-            std::cout << "生徒氏名: " << student.name << "さんを配置できませんでした。" << std::endl;
+            std::cout << "生徒氏名: " << student.GetName() << "さんを配置できませんでした。" << std::endl;
         }
     }
     else {
