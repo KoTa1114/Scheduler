@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <set>
+#include <stdlib.h>
 
 /*生徒の人数 N 講師の人数 M とするとCreate_Tableがボトルネックで計算量は(NMlogM)*/
 
@@ -13,11 +14,46 @@ class Student {
     int id, grade, subject, time;
     std::string name;
     public:
-    void SetId(int id_) {id = id_;}
-    void SetGrade(int grade_) {grade = grade_;}
-    void SetSubject(int subject_) {subject = subject_;}
-    void SetTime(int time_) {time = time_;}
-    void SetName(std::string name_) {name = name_;}
+    void SetId(int id_) {
+        if(id_ >= 0) {
+            id = id_;
+        } else {
+            std::cout << "idの入力にエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    void SetGrade(int grade_) {
+        if(1 <= grade_ && grade_ <= 3) {
+            grade = grade_;
+        } else {
+            std::cout << "gradeにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    void SetSubject(int subject_) {
+        if(0 <= subject_ && subject_ <= 4) {
+            subject = subject_;
+        } else {
+            std::cout << "subjectにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    void SetTime(int time_) {
+        if(1 <= time_ && time_ <= 3) {
+            time = time_;
+        } else {
+            std::cout << "timeにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    void SetName(std::string name_) {
+        if(!name_.empty()) {
+            name = name_;
+        } else {
+            std::cout << "nameにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
     int GetId() {return id;}
     int GetGrade() {return grade;}
     int GetSubject() {return subject;}
@@ -29,10 +65,38 @@ class Teacher {
     int time[3]; //1のとき担当可能
     std::string name;
     public:
-    void SetId(int id_) {id = id_;}
-    void SetSubject(int subject_) {subject = subject_;}
-    void SetTime(int index, int time_) {time[index] = time_;}
-    void SetName(std::string name_) {name = name_;}
+    void SetId(int id_) {
+        if(id_ >= 0) {
+            id = id_;
+        } else {
+            std::cout << "idにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    void SetSubject(int subject_) {
+        if(0 <= subject_ && subject_ <= 4) {
+            subject = subject_;
+        } else {
+            std::cout << "subjectにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    void SetTime(int index_, int time_) {
+        if(0 <= index_ && index_ <= 2 && 0 <= time_ && time_ <= 1) {
+            time[index_] = time_;
+        } else {
+            std::cout << "timeにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    void SetName(std::string name_) {
+        if(!name_.empty()) {
+            name = name_;
+        } else {
+            std::cout << "nameにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
     int GetId() {return id;}
     int GetSubject() {return subject;}
     int GetTime(int index) {return time[index];}
@@ -43,11 +107,46 @@ class Table {
     int grade, number;
     std::string student_name, teacher_name, subject;
     public:
-    void SetGrade(int grade_) {grade = grade_;}
-    void SetNumber(int number_) {number = number_;}
-    void SetStudent_name(std::string student_name_) {student_name = student_name_;}
-    void SetTeacher_name(std::string teacher_name_) {teacher_name = teacher_name_;}
-    void SetSubject(std::string subject_) {subject = subject_;}
+    void SetGrade(int grade_) {
+        if(1 <= grade_ && grade_ <= 3) {
+            grade = grade_;
+        } else {
+            std::cout << "gradeにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    void SetNumber(int number_) {
+        if(1 <= number_) {
+            number = number_;
+        } else {
+            std::cout << "numberにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    void SetStudent_name(std::string student_name_) {
+        if(!student_name_.empty()) {
+            student_name = student_name_;
+        } else {
+            std::cout << "student_nameにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    void SetTeacher_name(std::string teacher_name_) {
+        if(!teacher_name_.empty()) {
+            teacher_name = teacher_name_;
+        } else {
+            std::cout << "teacher_nameにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+    void SetSubject(std::string subject_) {
+        if(!subject_.empty()) {
+            subject = subject_;
+        } else {
+            std::cout << "subjectにエラーがあります" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
     int GetGrade() {return grade;}
     int GetNumber() {return number;}
     std::string GetStudent_name() {return student_name;}
@@ -164,7 +263,7 @@ std::string Subject(int num) {
 
 void Create_Table() {
     std::vector<int> table_num(3,1);
-   std::set<std::pair<int,int>> was; //講師がその時間に既に配置済みであるかを管理する
+    std::set<std::pair<int,int>> was; //講師がその時間に既に配置済みであるかを管理する
     for(auto a_student : student_list) {
         Student student = from_id_to_student[a_student.second];
         bool ok = false;
@@ -218,8 +317,7 @@ void Show_Result() {
         for(Student student : cannot_place_student) {
             std::cout << "生徒氏名: " << student.GetName() << "さんを配置できませんでした。" << std::endl;
         }
-    }
-    else {
+    } else {
         std::cout << "問題なく全ての生徒を配置することができました。" << std::endl;
     }
 }
